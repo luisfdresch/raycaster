@@ -49,6 +49,8 @@ function draw_rectangle(A::Array{UInt32,1}, width, height, x, y, dx, dy, color)
         print("Rectangle dimensions are invalid")
         return A
     end
+    x = UInt(floor(x))
+    y = UInt(floor(y))
     for i = x:x+dx-1
         for j = y:y+dy-1
             A[i+(j-1)*width] = color
@@ -89,12 +91,11 @@ function main()
     # Creating gradient
     A = create_gradient(A, width, height)
 
+    # Setting map dimensions
     map_w = 16
     map_h = 16
     map_layout = get_map()
     
-    # Draw rectangle
-    # A = draw_rectangle(A, width, height, 50, 120, 100, 200, pack_color(0x14, 0x14, 0xff))
     
     # Draw map
     wall_w::UInt8 = width/map_w
@@ -107,6 +108,35 @@ function main()
         end
     end
 
+    # Player position
+    player_x = 1.0
+    player_y = 10
+    player_color = pack_color(0xff, 0xff, 0xff)
+
+    # Player viewing features
+    player_dir = pi/4 
+    player_fov = 90
+
+    # Draw player rectangle map
+    A = draw_rectangle(A, width, height, 1+(floor(player_x))*wall_w, 1+(floor(player_y))*wall_h, wall_w, wall_h, pack_color(0xff, 0x14, 0x14))
+
+    # Draw player
+    A = draw_rectangle(A, width, height, 1+ (player_x)*wall_w ,1 + (player_y)*wall_h , 5, 5, player_color)
+
+    # Draw sight line
+    for c = 0:1:750
+        cx = player_x + c*cos(player_dir)
+        cy = player_y + c*sin(player_dir)
+        if map_layout[1 + UInt(floor(cx)) + UInt(floor(cy))*map_w] != '0';
+            println(c)
+            break
+        end
+        pix_x::UInt = floor((cx) * wall_w)
+        pix_y::UInt = floor((cy) * wall_h)
+        A[1 + pix_x + pix_y*width] = player_color 
+    end 
+        
+    
     # Saving image to .ppm format
     drop_ppm_image("./out.ppm", A, width,  height)
     println("Done")
