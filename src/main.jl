@@ -109,13 +109,13 @@ function main()
     end
 
     # Player position
-    player_x = 1.0
-    player_y = 10
+    player_x = 5.5
+    player_y = 1.1
     player_color = pack_color(0xff, 0xff, 0xff)
 
     # Player viewing features
-    player_dir = pi/4 
-    player_fov = 90
+    player_dir = deg2rad(65) 
+    player_fov = deg2rad(60) 
 
     # Draw player rectangle map
     A = draw_rectangle(A, width, height, 1+(floor(player_x))*wall_w, 1+(floor(player_y))*wall_h, wall_w, wall_h, pack_color(0xff, 0x14, 0x14))
@@ -123,19 +123,20 @@ function main()
     # Draw player
     A = draw_rectangle(A, width, height, 1+ (player_x)*wall_w ,1 + (player_y)*wall_h , 5, 5, player_color)
 
-    # Draw sight line
-    for c = 0:1:750
-        cx = player_x + c*cos(player_dir)
-        cy = player_y + c*sin(player_dir)
-        if map_layout[1 + UInt(floor(cx)) + UInt(floor(cy))*map_w] != '0';
-            println(c)
-            break
-        end
-        pix_x::UInt = floor((cx) * wall_w)
-        pix_y::UInt = floor((cy) * wall_h)
-        A[1 + pix_x + pix_y*width] = player_color 
-    end 
-        
+    # Draw FOV
+    for a = player_dir-player_fov/2:0.01:player_dir+player_fov/2
+        for c = 0:0.1:750
+            cx = player_x + c*cos(a)
+            cy = player_y + c*sin(a)
+            if map_layout[1 + UInt(floor(cx)) + UInt(floor(cy))*map_w] != '0';
+                println(c)
+                break
+            end
+            pix_x::UInt = floor((cx) * wall_w)
+            pix_y::UInt = floor((cy) * wall_h)
+            A[1 + pix_x + pix_y*width] = player_color 
+        end 
+    end    
     
     # Saving image to .ppm format
     drop_ppm_image("./out.ppm", A, width,  height)
