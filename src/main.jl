@@ -43,11 +43,44 @@ function create_gradient(A::Array{UInt32,1}, width, height)
     end
     return A
 end
+
+function draw_rectangle(A::Array{UInt32,1}, width, height, x, y, dx, dy, color)
+    if x+dx-1 > width || y+dy-1 > height
+        print("Rectangle dimensions are invalid")
+        return A
+    end
+    for i = x:x+dx-1
+        for j = y:y+dy-1
+            A[i+(j-1)*width] = color
+        end
+    end
+    return A
+end
  
+function get_map()
+    import_map = ( "1111111111111111",
+               "1000000000000001",
+               "1000000000000001",
+               "1001000011111111",
+               "1001000000000001",
+               "1001000000000001",
+               "1001111000111001",
+               "1000001000100001",
+               "1000001000100011",
+               "1000001000100011",
+               "1000001000000011",
+               "1000001000000011",
+               "1000001111000001",
+               "1000000000000001",
+               "1000000000000001",
+               "1111111111111111" )
+    return join(import_map)
+end
+
 function main()
     # Defining canvas size
-    width = 400
-    height = 300
+    width = 512
+    height = 512
         
     # Creating canvas array, initialized to red
     A = Array{UInt32,1}(undef, height * width)
@@ -55,7 +88,25 @@ function main()
     
     # Creating gradient
     A = create_gradient(A, width, height)
+
+    map_w = 16
+    map_h = 16
+    map_layout = get_map()
     
+    # Draw rectangle
+    # A = draw_rectangle(A, width, height, 50, 120, 100, 200, pack_color(0x14, 0x14, 0xff))
+    
+    # Draw map
+    wall_w::UInt8 = width/map_w
+    wall_h::UInt8 = height/map_h 
+    for j = 1:map_h
+        for i = 1:map_w
+            if map_layout[i + (j-1)*map_w] == '1'
+                A = draw_rectangle(A, width, height, 1+(i-1)*wall_w, 1+(j-1)*wall_h, wall_w, wall_h, pack_color(UInt8(floor(rand()*255)), 0x14, 0xff))
+            end
+        end
+    end
+
     # Saving image to .ppm format
     drop_ppm_image("./out.ppm", A, width,  height)
     println("Done")
