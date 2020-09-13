@@ -46,7 +46,7 @@ end
 
 function draw_rectangle(A::Array{UInt32,1}, width, height, x, y, dx, dy, color)
     if x+dx-1 > width || y+dy-1 > height
-        print("Rectangle dimensions are invalid")
+        print("inv dim")
         return A
     end
     x = UInt(floor(x))
@@ -81,15 +81,12 @@ end
 
 function main()
     # Defining canvas size
-    width = 512
-    height = 512
+    width::UInt = 512*2
+    height::UInt = 512
         
     # Creating canvas array, initialized to red
     A = Array{UInt32,1}(undef, height * width)
-    A = fill!(A, 255)
-    
-    # Creating gradient
-    A = create_gradient(A, width, height)
+    A = fill!(A, pack_color(0x00, 0x00, 0x00))
 
     # Setting map dimensions
     map_w = 16
@@ -98,7 +95,7 @@ function main()
     
     
     # Draw map
-    wall_w::UInt8 = width/map_w
+    wall_w::UInt8 = width/(map_w*2)
     wall_h::UInt8 = height/map_h 
     for j = 1:map_h
         for i = 1:map_w
@@ -109,32 +106,39 @@ function main()
     end
 
     # Player position
-    player_x = 5.5
-    player_y = 1.1
-    player_color = pack_color(0xff, 0xff, 0xff)
+    player_x = 6
+    player_y = 3.1
+    player_color = pack_color( 0x00, 0xff, 0x00)
 
     # Player viewing features
-    player_dir = deg2rad(65) 
-    player_fov = deg2rad(60) 
+    player_dir = deg2rad(45) 
+    player_fov = deg2rad(120) 
 
-    # Draw player rectangle map
+    # Draw player rectangle in map
     A = draw_rectangle(A, width, height, 1+(floor(player_x))*wall_w, 1+(floor(player_y))*wall_h, wall_w, wall_h, pack_color(0xff, 0x14, 0x14))
 
     # Draw player
     A = draw_rectangle(A, width, height, 1+ (player_x)*wall_w ,1 + (player_y)*wall_h , 5, 5, player_color)
 
     # Draw FOV
-    for a = player_dir-player_fov/2:0.01:player_dir+player_fov/2
-        for c = 0:0.1:750
-            cx = player_x + c*cos(a)
-            cy = player_y + c*sin(a)
+    for a = 1:512
+        angle = player_dir-(player_fov/2) + (a-1)*player_fov/(width/2)
+        for c = 0:0.05:750
+            cx = player_x + c*cos(angle)
+            cy = player_y + c*sin(angle)
             if map_layout[1 + UInt(floor(cx)) + UInt(floor(cy))*map_w] != '0';
                 println(c)
+
+                #Draw 3D FOV
+                A = draw_rectangle(A, width, height, width/2 + a, 0.5*(height-(height*(1/(c+1)))), 1 , UInt(floor(height*(1/(c+1)))) , pack_color(0xff, 0x00, 0x00)) 
                 break
             end
+
+            #Draw sight line in map
             pix_x::UInt = floor((cx) * wall_w)
             pix_y::UInt = floor((cy) * wall_h)
             A[1 + pix_x + pix_y*width] = player_color 
+            
         end 
     end    
     
