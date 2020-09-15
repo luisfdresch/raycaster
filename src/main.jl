@@ -41,7 +41,7 @@ global update_count = 0
     
     # Draw player position
     rectangle(ctx, floor(1+ (player_x)*wall_w) ,floor(1 + (player_y)*wall_h) , 5, 5)
-    set_source_rgb(ctx, 1, 1, 1)
+    set_source_rgb(ctx, 1, 0.1, 0.1)
     fill(ctx)
 
     # Draw FOV
@@ -52,18 +52,21 @@ global update_count = 0
             cy = player_y + c*sin(angle)
             if map_layout[1 + UInt(floor(cx)) + UInt(floor(cy))*map_w] != '0'; #If casted ray meets wall
                 #Draw 3D FOV
-                rectangle(ctx,   win_w/2 + a, UInt(floor(0.5*(win_h-(win_h*(1/(c+1)))))), 1 , UInt(floor(win_h*(1/(c+1)))) )
-                set_source_rgb(ctx, 0.1, 0.5-1/c, 1/c)
+                c_c = c*cos(player_dir - angle)
+                rectangle(ctx,   win_w/2 + a, UInt(floor(0.5*(win_h-(win_h*(1/(c_c+1)))))), 1 , UInt(floor(win_h*(1/(c_c+1)))) )
+                set_source_rgb(ctx, 5.5/c_c^3, 3.5/c_c^3, 2.5/c_c^3)
                 fill(ctx)
                 break
             end
 
             #Draw sight line in map
-            pix_x::UInt = floor((cx) * wall_w)
-            pix_y::UInt = floor((cy) * wall_h)
-            rectangle(ctx, pix_x, pix_y, 1, 1)
-            set_source_rgb(ctx, 0.75, 0.75, 0.75)
-            fill(ctx)
+            if a == 1 || a === 512
+                pix_x::UInt = floor((cx) * wall_w)
+                pix_y::UInt = floor((cy) * wall_h)
+                rectangle(ctx, pix_x, pix_y, 1, 1)
+                set_source_rgb(ctx, 0.75, 0.75, 0.75)
+                fill(ctx)
+            end
             
         end 
     end    
@@ -90,7 +93,7 @@ function newpos!(key)
         global player_dir -= 0.10
     elseif key == 115 #S
         global player_x -= 0.10*cos(player_dir)
-        global player_y -= 0.10*cos(player_dir)
+        global player_y -= 0.10*sin(player_dir)
     elseif key == 100 #D
         global player_dir += 0.10
     end
