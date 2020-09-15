@@ -1,12 +1,140 @@
 # Importing packages
-using Colors
-using Plots
-
+#using Colors
+#using Plots
+using Gtk
 
 
 
 # Plotting array
 #plot(A)
+
+
+global player_x = 5
+global player_y = 5  
+global player_dir = deg2rad(45)
+global player_fov = deg2rad(100) 
+global c
+global update_count = 0
+
+@guarded function update_canvas(widget)
+    global player_x
+    global player_y
+    global player_dir
+    global player_fov
+
+    ctx = Gtk.getgc(widget)
+    rectangle(ctx, 0, 0, width(widget), height(widget))
+    set_source_rgb(ctx, 0,0,0)
+    fill(ctx)
+    rectangle(ctx, player_x, player_y, 10, 10)
+    set_source_rgb(ctx, 1, 0, 0)
+    fill(ctx)
+    
+    #To Fix -------------------vvvvvv-------------------v-------------------------------
+
+    map_layout = get_map()
+    win_w= width(widget)
+    win_h = height(widget)
+    map_w = map_h = 16  
+    
+    # Draw map
+    wall_w::UInt8 = win_w/(map_w*2)
+    wall_h::UInt8 = win_h/map_h 
+    for j = 1:map_h
+        for i = 1:map_w
+            if map_layout[i + (j-1)*map_w] == '1'
+                #A = draw_rectangle(A, win_w, win_h, 1+(i-1)*wall_w, 1+(j-1)*wall_h, wall_w, wall_h, pack_color(UInt8(floor(rand()*255)), 0x14, 0xff))
+                rectangle(ctx, 1+(i-1)*wall_w, 1+(j-1)*wall_h, wall_w, wall_h)
+                set_source_rgb(ctx, 0.1, 0.5, 0)
+                fill(ctx)
+            end
+        end
+    end
+
+
+    # Draw player's tile in map
+    #A = draw_rectangle(A, win_w, win_h, 1+(floor(player_x))*wall_w, 1+(floor(player_y))*wall_h, wall_w, wall_h, pack_color(0xff, 0x14, 0x14))
+    #rectangle(ctx, 1+(floor(player_x))*wall_w, 1+(floor(player_y))*wall_h, wall_w, wall_h)
+    
+    # Draw player position
+    #A = draw_rectangle(A, win_w, win_h, 1+ (player_x)*wall_w ,1 + (player_y)*wall_h , 5, 5, player_color)
+    rectangle(ctx, floor(1+ (player_x)*wall_w) ,floor(1 + (player_y)*wall_h) , 5, 5)
+    set_source_rgb(ctx, 1, 1, 1)
+    fill(ctx)
+
+
+    # Draw FOV
+    for a = 1:512
+        angle = player_dir-(player_fov/2) + (a-1)*player_fov/(win_w/2)
+        for c = 0:0.05:750
+            cx = player_x + c*cos(angle)
+            cy = player_y + c*sin(angle)
+            if map_layout[1 + UInt(floor(cx)) + UInt(floor(cy))*map_w] != '0';
+                #println(c)
+
+                #Draw 3D FOV
+                #A = draw_rectangle(A, win_w, win_h, win_w/2 + a, 0.5*(win_h-(win_h*(1/(c+1)))), 1 , UInt(floor(win_h*(1/(c+1)))) , pack_color(0xff, 0x00, 0x00)) 
+                rectangle(ctx,   win_w/2 + a, UInt(floor(0.5*(win_h-(win_h*(1/(c+1)))))), 1 , UInt(floor(win_h*(1/(c+1)))) )
+                set_source_rgb(ctx, 0.1, 0.5-1/c, 1/c)
+                fill(ctx)
+                            
+                break
+            end
+
+            #Draw sight line in map
+            pix_x::UInt = floor((cx) * wall_w)
+            pix_y::UInt = floor((cy) * wall_h)
+            ##A[1 + pix_x + pix_y*win_w] = player_color 
+            rectangle(ctx, pix_x, pix_y, 1, 1)
+            set_source_rgb(ctx, 0.75, 0.75, 0.75)
+            fill(ctx)
+
+            
+        end 
+    end    
+## To Fix --------------------^^^^⁻---------------------------------------
+    global update_count += 1
+    println("Frame number: $update_count")
+end
+
+function on_key_clicked(w, event)
+    newpos!(event.keyval)
+    #println(player_x , " ", player_y)
+    global c
+    global win
+    update_canvas(c)
+    show(c)
+    showall(win)
+    reveal(w)
+end
+
+function newpos!(key)
+    global player_dir
+    global player_x
+    global player_y
+    if key == 119 #W
+        global player_x +=  0.1*cos(player_dir)
+        global player_y +=  0.1*sin(player_dir)
+    elseif key == 97 #A
+        global player_dir -= 0.10
+    elseif key == 115 #S
+        global player_x -= 0.10*cos(player_dir)
+        global player_y -= 0.10*cos(player_dir)
+    elseif key == 100 #D
+        global player_dir += 0.10
+    end
+end
+
+function app()
+    win_w = 1024
+    win_h = 512
+    mapsize = (16,16)
+    global c = @GtkCanvas()
+    global win = GtkWindow(c, "Raycaster example", win_w, win_h)
+    c.draw = update_canvas
+    signal_connect(on_key_clicked, win, "key-press-event")
+    showall(win)
+end
 
 
 function pack_color(r::UInt8,  g::UInt8, b::UInt8, a::UInt8 = 0xff)
@@ -93,6 +221,14 @@ function main()
     map_h = 16
     map_layout = get_map()
     
+    # Player position
+    player_x = 6
+    player_y = 3.1
+    player_color = pack_color( 0x00, 0xff, 0x00)
+
+    # Player viewing features
+    player_dir = deg2rad(45) 
+    player_fov = deg2rad(120) 
     
     # Draw map
     wall_w::UInt8 = width/(map_w*2)
@@ -105,14 +241,6 @@ function main()
         end
     end
 
-    # Player position
-    player_x = 6
-    player_y = 3.1
-    player_color = pack_color( 0x00, 0xff, 0x00)
-
-    # Player viewing features
-    player_dir = deg2rad(45) 
-    player_fov = deg2rad(120) 
 
     # Draw player rectangle in map
     A = draw_rectangle(A, width, height, 1+(floor(player_x))*wall_w, 1+(floor(player_y))*wall_h, wall_w, wall_h, pack_color(0xff, 0x14, 0x14))
@@ -146,3 +274,4 @@ function main()
     drop_ppm_image("./out.ppm", A, width,  height)
     println("Done")
 end
+
