@@ -6,7 +6,7 @@ global player_x = 5
 global player_y = 5  
 global player_dir = deg2rad(45)
 global player_fov = deg2rad(100) 
-global c
+global canvas
 global update_count = 0
 
 @guarded function update_canvas(widget)
@@ -76,9 +76,9 @@ global update_count = 0
 end
 
 function on_key_clicked(w, event)
-    global c
+    global canvas
     newpos!(event.keyval) #Get new position
-    update_canvas(c) #Update canvas
+    update_canvas(canvas) #Update canvas
     reveal(w)
 end
 
@@ -103,9 +103,9 @@ function app()
     win_w = 1024
     win_h = 512
     mapsize = (16,16) #Unused
-    global c = @GtkCanvas()
-    global win = GtkWindow(c, "Raycaster example", win_w, win_h)
-    c.draw = update_canvas
+    global canvas = @GtkCanvas()
+    global win = GtkWindow(canvas, "Raycaster example", win_w, win_h)
+    canvas.draw = update_canvas
     signal_connect(on_key_clicked, win, "key-press-event")
     showall(win)
 end
@@ -129,4 +129,6 @@ function get_map()
                "1111111111111111" )
     return join(import_map)
 end
+
+app()
 
