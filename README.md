@@ -1,10 +1,10 @@
 # Raycaster example
-Raycaster example based on [ssloy's tinyraycaster](https://github.com/ssloy/tinyraycaster), using Julia and Gtk3+ with canvas
+Raycaster example based on [ssloy's tinyraycaster](https://github.com/ssloy/tinyraycaster), using Julia and Gtk with canvas.
 
 ![Screenshot](./screenshot.png)
 
 ## Installation
-On project's root directory type
+On project's root directory type:
 
 ```bash
 julia --project=.
