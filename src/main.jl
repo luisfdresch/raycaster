@@ -46,14 +46,15 @@ function update_canvas(renderer)
     # Draw FOV
     for a = 1:512
         angle = player_dir-(player_fov/2) + (a-1)*player_fov/(win_w/2)
-        for c = 0:0.01:750
+        for c = 0:0.05:750
             cx = player_x + c*cos(angle)
             cy = player_y + c*sin(angle)
             if map_layout[1 + UInt(floor(cx)) + UInt(floor(cy))*map_w] != '0'; #If casted ray meets wall
                 #Draw 3D FOV
                 c_c = c*cos(player_dir - angle)
+                attenuation = 1/(1 + 0.1 * c + 0.1*c^2)
                 rect =  SDL2.Rect( win_w/2 + a, UInt(floor(0.5*(win_h-(win_h*(1/(c_c+1)))))), 1 , UInt(floor(win_h*(1/(c_c+1)))) )
-                SDL2.SetRenderDrawColor(renderer, Int64(floor(255/(1+c_c^2))) , Int64(floor(180/(1+c_c^2))) ,Int64(floor(120/(1+c_c^2))) , 255)
+                SDL2.SetRenderDrawColor(renderer, Int64(floor(255*attenuation)), Int64(floor(180*attenuation)) ,Int64(floor(120*attenuation )) , 255)
                 SDL2.RenderFillRect(renderer, Ref(rect))
                 break
 
@@ -113,6 +114,7 @@ function main_loop(renderer, keys_dict)
             SDL2.Quit()
         end
     end
+    sleep(0.1)
 end
 
 function app()
