@@ -59,6 +59,12 @@ git-tree-sha1 = "0a4e4402a91b0761c1de961f94204da5e306a4f3"
 uuid = "2e619515-83b5-522b-bb60-26c02a35a201"
 version = "2.2.7+5"
 
+[[FLAC_jll]]
+deps = ["Libdl", "Ogg_jll", "Pkg"]
+git-tree-sha1 = "cd528d5083a589aab69dc6de73a901efa9d69586"
+uuid = "1d38b3a6-207b-531b-80e8-c83f48dafa73"
+version = "1.3.3+2"
+
 [[FixedPointNumbers]]
 deps = ["Statistics"]
 git-tree-sha1 = "335bfdceacc84c5cdf16aadc768aa5ddfc5383cc"
@@ -94,6 +100,12 @@ deps = ["Libdl", "Libiconv_jll", "Pkg", "XML2_jll"]
 git-tree-sha1 = "922315c1eb4e5072b9994fc47072d0351906fe4c"
 uuid = "78b55507-aeef-58d4-861c-77aaff3498b1"
 version = "0.20.1+6"
+
+[[Giflib_jll]]
+deps = ["Libdl", "Pkg"]
+git-tree-sha1 = "d47390bd2ca1e5ea4219a7aaedbf76f3ca58fde7"
+uuid = "59f7168a-df46-5410-90c8-f2779963d0ec"
+version = "5.1.4+1"
 
 [[Glib_jll]]
 deps = ["Gettext_jll", "Libdl", "Libffi_jll", "Libiconv_jll", "Libmount_jll", "PCRE_jll", "Pkg", "Zlib_jll"]
@@ -230,6 +242,12 @@ git-tree-sha1 = "c84c576296d0e2fbb3fc134d3e09086b3ea617cd"
 uuid = "77ba4419-2d1f-58cd-9bb1-8ffee604a2e3"
 version = "0.3.4"
 
+[[Ogg_jll]]
+deps = ["Libdl", "Pkg"]
+git-tree-sha1 = "4c3275cda1ba99d1244d0b82a9d0ca871c3cf66b"
+uuid = "e7412a2a-1a6e-54c0-be00-318e2571c051"
+version = "1.3.4+1"
+
 [[PCRE_jll]]
 deps = ["Libdl", "Pkg"]
 git-tree-sha1 = "9f6be70c2b80ca004d18a4a38f5724264b4115c0"
@@ -270,11 +288,41 @@ git-tree-sha1 = "7b1d07f411bc8ddb7977ec7f377b97b158514fe0"
 uuid = "189a3867-3050-52da-a836-e630ba90ab69"
 version = "0.2.0"
 
+[[SDL2_image_jll]]
+deps = ["JpegTurbo_jll", "Libdl", "Libtiff_jll", "Pkg", "SDL2_jll", "libpng_jll", "libwebp_jll"]
+git-tree-sha1 = "0ff92c66d1c3e99b4be7865ad55a4c38bb4859bf"
+uuid = "41f3cfe1-fd11-58ad-8074-b9730c29438b"
+version = "2.0.5+1"
+
+[[SDL2_jll]]
+deps = ["Libdl", "Libglvnd_jll", "Pkg", "Xorg_libX11_jll", "Xorg_libXScrnSaver_jll", "Xorg_libXcursor_jll", "Xorg_libXext_jll", "Xorg_libXinerama_jll", "Xorg_libXrandr_jll", "alsa_jll"]
+git-tree-sha1 = "8481dab174638f861e49bc046c59adc1e0af8c9d"
+uuid = "ab825dc5-c88e-5901-9575-1e5e20358fcf"
+version = "2.0.12+1"
+
+[[SDL2_mixer_jll]]
+deps = ["FLAC_jll", "Libdl", "Pkg", "SDL2_jll", "libvorbis_jll", "mpg123_jll"]
+git-tree-sha1 = "d18e37eb4f8137fb616aca7383e06c0348f33f63"
+uuid = "7e88e5ca-120e-58e7-9660-b2187fd466c0"
+version = "2.0.4+1"
+
+[[SDL2_ttf_jll]]
+deps = ["FreeType2_jll", "Glib_jll", "Graphite2_jll", "HarfBuzz_jll", "Libdl", "PCRE_jll", "Pkg", "SDL2_jll", "libpng_jll"]
+git-tree-sha1 = "3d1638da5b769a2d2dad27baff15311949e09b95"
+uuid = "ca9d4746-8a27-5104-babe-80f83b336947"
+version = "2.0.15+1"
+
 [[SHA]]
 uuid = "ea8e919c-243c-51af-8825-aaa63cd721ce"
 
 [[Serialization]]
 uuid = "9e88b42a-f829-5b0c-bbe9-9e923198166b"
+
+[[SimpleDirectMediaLayer]]
+deps = ["ColorTypes", "Libdl", "SDL2_image_jll", "SDL2_jll", "SDL2_mixer_jll", "SDL2_ttf_jll"]
+git-tree-sha1 = "f81e641b1479708e54a6181b460874f8d1d2b3ca"
+uuid = "98e33af6-2ee5-5afd-9e75-cbc738b767c4"
+version = "0.2.1"
 
 [[Sockets]]
 uuid = "6462fe0b-24de-5631-8697-dd941f90decc"
@@ -327,6 +375,12 @@ deps = ["Libdl", "Pkg", "Xorg_libxcb_jll", "Xorg_xtrans_jll"]
 git-tree-sha1 = "25ef1a3d04558407fc618797c1340d3703bacb94"
 uuid = "4f6342f7-b3d2-589e-9d20-edeb45f2b2bc"
 version = "1.6.9+3"
+
+[[Xorg_libXScrnSaver_jll]]
+deps = ["Libdl", "Pkg", "Xorg_libXext_jll"]
+git-tree-sha1 = "e20cd49b76c75b19943d3763fe8e62566d3b1f4e"
+uuid = "41e2f9bb-6422-5ff7-a427-aa949331d861"
+version = "1.2.3+2"
 
 [[Xorg_libXau_jll]]
 deps = ["Libdl", "Pkg"]
@@ -454,6 +508,12 @@ git-tree-sha1 = "b641e8f51f6fd59f15a9b7beb9b1cf4c2c0b31ba"
 uuid = "b437f822-2cd6-5e08-a15c-8bac984d38ee"
 version = "3.33.92+4"
 
+[[alsa_jll]]
+deps = ["Libdl", "Pkg"]
+git-tree-sha1 = "04ec50d2469ab57b512f0edc6bd56cc049daeee4"
+uuid = "45378030-f8ea-5b20-a7c7-1a9d95efb90e"
+version = "1.2.1-1+1"
+
 [[at_spi2_atk_jll]]
 deps = ["ATK_jll", "Libdl", "Pkg", "XML2_jll", "Xorg_libX11_jll", "at_spi2_core_jll"]
 git-tree-sha1 = "c6d6e687fc00134acbeae3ba51203be895196a39"
@@ -489,6 +549,24 @@ deps = ["Libdl", "Pkg", "Zlib_jll"]
 git-tree-sha1 = "0a93f3eae5b80f08dc789e549657c199f1da6417"
 uuid = "b53b4c65-9356-5827-b1ea-8c7a1a84506f"
 version = "1.6.37+5"
+
+[[libvorbis_jll]]
+deps = ["Libdl", "Ogg_jll", "Pkg"]
+git-tree-sha1 = "8014e1c1033009edcfe820ec25877a9f1862ba4c"
+uuid = "f27f6e37-5d2b-51aa-960f-b287f2bc3b7a"
+version = "1.3.6+5"
+
+[[libwebp_jll]]
+deps = ["Giflib_jll", "JpegTurbo_jll", "Libdl", "Libglvnd_jll", "Libtiff_jll", "Pkg", "libpng_jll"]
+git-tree-sha1 = "ba19e70487d21c0c9224869d5be92498f1b9fae8"
+uuid = "c5f90fcd-3b7e-5836-afba-fc50a0988cb2"
+version = "1.1.0+0"
+
+[[mpg123_jll]]
+deps = ["Libdl", "Pkg"]
+git-tree-sha1 = "f78f01d2bf6a5e97afdab9ae7c862c41e1e9d86a"
+uuid = "3205ef68-7822-558b-ad0d-1b4740f12437"
+version = "1.25.12+0"
 
 [[xkbcommon_jll]]
 deps = ["Libdl", "Pkg", "Wayland_jll", "Wayland_protocols_jll", "Xorg_libxcb_jll", "Xorg_xkeyboard_config_jll"]
